@@ -4,11 +4,12 @@ import axios from 'axios';
 export default {
   name: 'App',
 
-data(){
-  return{
-    projects:''
-  }
-},
+  data() {
+    return {
+      base_url: 'http://127.0.0.1:8000',
+      projects: ''
+    }
+  },
 
   mounted() {
     axios.get('http://127.0.0.1:8000/api/projects')
@@ -28,7 +29,13 @@ data(){
       <div class="project-details">
         <h2>{{ project.nome }}</h2>
         <p><strong>Autore:</strong> {{ project.autore }}</p>
-        <img :src="project.cover_image" alt="Cover Image" class="project-image">
+        <template v-if="!project.cover_image.startsWith('http')">
+          <img :src="base_url + '/storage/' + project.cover_image" alt="Cover Image" class="project-image">
+        </template>
+        <template v-else>
+          <img :src="project.cover_image" alt="Cover Image" class="project-image">
+        </template>
+
         <p><strong>Descrizione:</strong> {{ project.descrizione }}</p>
         <p><strong>Inizio:</strong> {{ project.inizio }}</p>
         <p><strong>Fine:</strong> {{ project.fine }}</p>
@@ -86,7 +93,7 @@ data(){
   font-weight: bold;
 }
 
-p{
+p {
   color: rgb(0, 0, 0);
 }
 </style>
